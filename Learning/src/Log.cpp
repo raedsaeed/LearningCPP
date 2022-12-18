@@ -1,4 +1,4 @@
-#include <iostream>
+#include "pch.h"
 
 void log(const char* message) {
 	std::cout << message << std::endl;

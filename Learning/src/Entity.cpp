@@ -1,3 +1,4 @@
+#pragma once
 #include "String.cpp"
 
 class Printable {
@@ -11,12 +12,40 @@ class Entity : public Printable {
 public:
 	Entity() : mName("Unknow Entity") {} // constructor initilizer 
 	Entity(const String& name) : mName(name) {}
-	virtual String getName() { return mName; }
+	Entity(String&& name) : mName(std::move(name)){} // using Move Semantics
+	virtual String& getName() { return mName; }
 
-	// Inherited via Printable
+	//Inherited via Printable --> overriding printClassName method from Printable Interface
 	virtual void printClassName() override
 	{
-		
+
 	}
 
 };
+
+class Player : public Entity
+{
+public:
+	Player() : Entity("Unknown Player") {
+		getName().print();
+	}
+
+	~Player() {}
+
+private:
+
+};
+
+
+class Enemy : public Entity
+{
+public:
+	Enemy() {
+
+	}
+	~Enemy() {}
+
+private:
+
+};
+

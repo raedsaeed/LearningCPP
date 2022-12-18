@@ -1,5 +1,4 @@
-#include <string>
-#include <ostream>
+#include "pch.h"
 
 class String
 {
@@ -8,7 +7,10 @@ private:
 	unsigned int mSize;
 
 public:
+	String() {}
+
 	String(const char* buffer) {
+		std::cout << "Created : " << buffer << std::endl;
 		mSize = strlen(buffer);
 		mBuffer = new char[mSize + 1];
 		memcpy(mBuffer, buffer, mSize);
@@ -16,9 +18,19 @@ public:
 	}
 
 	String(const String& other) : mSize(other.mSize) {
+		std::cout << "Copied\n";
 		createCopy(other);
 	}
 
+
+	// using Move Semantics 
+	String(String&& other) noexcept {
+		mBuffer = other.mBuffer;
+		mSize = other.mSize;
+
+		other.mBuffer = nullptr;
+		other.mSize = 0;
+	}
 
 	~String() {
 		delete[] mBuffer;
@@ -42,9 +54,27 @@ public:
 		return false;
 	}
 
-	/*String& operator = (String& other) {
-		return createCopy(other);
-	}*/
+
+	String& operator = (String&& other) noexcept {
+		if (this != &other) {
+			delete[] mBuffer;
+			mBuffer = other.mBuffer;
+			mSize = other.mSize;
+
+			other.mSize = 0;
+			other.mBuffer = nullptr;
+		}
+		return *this;
+	}
+
+	void print() {
+		if (mBuffer == nullptr || mSize == 0) {
+			std::cout << std::endl;
+			return;
+		}
+
+		std::cout << mBuffer << std::endl;
+	}
 
 private:
 	void createCopy(const String& other) {
@@ -56,7 +86,14 @@ private:
 };
 
 
-//std::ostream& operator << (std::ostream& stream, const String& string) {
-//	std::cout << string.mBuffer << std::endl;
-//	return stream;
+//int main() {
+//	std::cout << "Operator Lessons" << std::endl;
+//	String first = "Raed";
+//	String second = "Raed";
+//
+//	std::cout << first;
+//	std::cout << second;
+//
+//	std::cout << "Is equals " << (first == second) << std::endl;
+//	std::cout << "End Operator Lesson" << std::endl;
 //}
